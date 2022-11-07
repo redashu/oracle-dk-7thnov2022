@@ -237,5 +237,75 @@ aba8276b8857        alpine              "ping google.com"   2 minutes ago       
   49  docker logs HKO 
    50  docker logs  ashuc1 
 ```
+## more container operations 
+
+### checking container resources consumption 
+
+```
+[ashu@docker-ce-server ~]$ docker  stats  ashuc1 
+CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT   MEM %               NET I/O             BLOCK I/O           PIDS
+1bd547d9737f        ashuc1              0.01%               292KiB / 15.35GiB   0.00%               496kB / 495kB       0B / 0B             1
+^C
+```
+
+### stopping a container 
+
+```
+[ashu@docker-ce-server ~]$ docker  stop  ashuc1 
+ashuc1
+```
+
+### starting a non running container 
+
+```
+[ashu@docker-ce-server ~]$ docker   start  ashuc1 
+ashuc1
+[ashu@docker-ce-server ~]$ docker  ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+1bd547d9737f        alpine              "ping google.com"   About an hour ago   Up 1 second                             ashuc1
+[ashu@docker-ce-server ~]$ 
+```
+
+### accessing a running container command line 
+
+```
+[ashu@docker-ce-server ~]$ docker   exec   ashuc1   whoami 
+root
+[ashu@docker-ce-server ~]$ whoami
+ashu
+[ashu@docker-ce-server ~]$ 
+[ashu@docker-ce-server ~]$ docker   exec   ashuc1  cat /etc/os-release 
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.16.2
+PRETTY_NAME="Alpine Linux v3.16"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
+[ashu@docker-ce-server ~]$ 
+```
+
+### getting container shell
+
+```
+[ashu@docker-ce-server ~]$ docker   exec -it   ashuc1  sh 
+/ # 
+/ # 
+/ # whoami
+root
+/ # cat /etc/os-release 
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.16.2
+PRETTY_NAME="Alpine Linux v3.16"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # 
+/ # exit
+
+```
+
+
 
 
