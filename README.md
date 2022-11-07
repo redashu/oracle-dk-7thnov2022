@@ -319,6 +319,55 @@ ashuc1
 
 <img src="life.png">
 
+## Day1 problem 
+
+```
+[ashu@docker-ce-server ~]$ docker  run -d --name ashuc1  alpine ping fb.com 
+aed018842202ff884fcaf93ae5b76dfd1c87be883efae0a1e8d8bd2a83327740
+[ashu@docker-ce-server ~]$ docker  run -d --name ashuc2  alpine ping fb.com 
+112cdd2b5aebbf1092723fff111bc3f9d87ac76994339bf2b565fe5bc1982020
+[ashu@docker-ce-server ~]$ 
+[ashu@docker-ce-server ~]$ 
+[ashu@docker-ce-server ~]$ docker  exec -it ashuc1  sh 
+/ # pwd
+/
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # echo hello world  >helloc1.txt 
+/ # ls
+bin          etc          home         media        opt          root         sbin         sys          usr
+dev          helloc1.txt  lib          mnt          proc         run          srv          tmp          var
+/ # cat helloc1.txt 
+hello world
+/ # exit
+[ashu@docker-ce-server ~]$ docker  cp  ashuc1:/helloc1.txt  . 
+[ashu@docker-ce-server ~]$ ls
+helloc1.txt
+[ashu@docker-ce-server ~]$ docker  cp helloc1.txt  ashuc2:/
+[ashu@docker-ce-server ~]$ 
+[ashu@docker-ce-server ~]$ docker  exec ashuc2  ls  /
+bin
+dev
+etc
+helloc1.txt
+home
+lib
+media
+mnt
+opt
+proc
+root
+run
+sbin
+srv
+sys
+tmp
+usr
+var
+[ashu@docker-ce-server ~]$ 
+
+```
+
 
 
 
