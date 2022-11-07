@@ -368,6 +368,63 @@ var
 
 ```
 
+### kill & rm 
 
+```
+[ashu@docker-ce-server ~]$ docker  kill ashuc1 ashuc2 
+ashuc1
+ashuc2
+[ashu@docker-ce-server ~]$ docker  rm ashuc1 ashuc2 
+ashuc1
+ashuc2
+
+```
+
+## creating / BUilding custom container images 
+
+<img src="imagesb.png">
+
+### java code containerization 
+
+### sample java code 
+
+```
+class hello { 
+    public static void main(String args[]) 
+    { 
+        // test expression 
+        while (true) { 
+            System.out.println("Hello World"); 
+            try {
+                Thread.sleep(2000);
+            } catch (Exception ex) {
+                // Ignored
+            }
+  
+            // update expression 
+        } 
+    } 
+} 
+```
+
+### Dockerfile 
+
+```
+FROM openjdk 
+# we are reffering openjdk image from docker hub 
+LABEL name=ashutoshh
+LABEL email=ashutoshh@linux.com
+# LABEL is optional keyword but you can use to share image owner/designer details
+RUN mkdir /mycode 
+# RUN is to get a shell in container while image build time 
+COPY  hello.java /mycode/hello.java
+# to copy data from docker client to docker host 
+WORKDIR /mycode
+# changing directory like cd command in linux 
+RUN javac hello.java 
+# to run compile step in java code 
+CMD ["java","hello"]
+# for setting default process 
+```
 
 
