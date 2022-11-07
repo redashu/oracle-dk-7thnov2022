@@ -486,5 +486,51 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 6cec6c7967b9        ashujava:1.1        "java hello"        22 seconds ago      Up 21 seconds                           ashujc1
 ```
 
+### maintain version of app using docker image 
+
+```
+ 130   docker  build  -t  ashujava:1.2  java/ 
+  131  history 
+[ashu@docker-ce-server ashuimages]$ docker  run -itd --name ashujc2  ashujava:1.2
+b62af5a4ceca9a67a667e7fef4c4fd4fe951a72510f584f0690199bdd05110ee
+[ashu@docker-ce-server ashuimages]$ docker logs ashujc2
+Hello World , welcome to DOcker !!
+Hello World , welcome to DOcker !!
+Hello World , welcome to DOcker !!
+```
+### lets choose specific jdk version using oel 8 - jdk 8 
+
+### dockerfile 
+
+```
+FROM oraclelinux:8.4 
+LABEL email=ashutoshh@linux.com
+RUN yum install java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64 -y && mkdir /code
+COPY hello.java /code/
+WORKDIR /code
+RUN javac hello.java
+CMD ["java","hello"]
+```
+
+### lets build it 
+
+```
+[ashu@docker-ce-server ashuimages]$ ls
+java  python  webapps
+[ashu@docker-ce-server ashuimages]$ cd  java/
+[ashu@docker-ce-server java]$ ls
+Dockerfile  hello.java  jdk.dockerfile
+[ashu@docker-ce-server java]$ docker build -t  ashujava:jdk8_v1  -f  jdk.dockerfile  . 
+Sending build context to Docker daemon  4.608kB
+Step 1/7 : FROM oraclelinux:8.4
+ ---> 97e22ab49eea
+Step 2/7 : LABEL email=ashutoshh@linux.com
+ ---> Running in 8d97f233cdd5
+Removing intermediate container 8d97f233cdd5
+ ---> 5f70fec7199d
+```
+
+
+
 
 
