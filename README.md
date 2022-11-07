@@ -194,5 +194,17 @@ oraclelinux         8.4                 97e22ab49eea        12 months ago       
 
 ```
 
+### docker pull & tag 
+
+```
+ 27  docker pull quay.io/libpod/alpine
+   28  docker  images  |   grep quay
+   29  docker  tag  961769676411  ashuquay:v1 
+   30  docker images
+   31  history 
+   32  docker pull container-registry.oracle.com/java/openjdk:latest
+   33  docker tag container-registry.oracle.com/java/openjdk:latest   ashuoracle:v1 
+```
+
 
 
