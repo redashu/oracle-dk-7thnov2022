@@ -128,5 +128,71 @@ Server: Docker Engine - Community
 
 ```
 
+### Docker architecture 
+
+<img src="darch.png">
+
+### app containerization 
+
+<img src="app2cont.png">
+
+### images and containers 
+
+<img src="img.png">
+
+### a docker images library -- Registry 
+
+<img src="reg.png">
+
+### pulling and searching images 
+
+```
+[ashu@docker-ce-server ~]$ docker  images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+[ashu@docker-ce-server ~]$ 
+[ashu@docker-ce-server ~]$ 
+[ashu@docker-ce-server ~]$ docker  pull  mysql
+Using default tag: latest
+Trying to pull repository docker.io/library/mysql ... 
+latest: Pulling from docker.io/library/mysql
+feec22b5b798: Pull complete 
+3b33952322b1: Pull complete 
+8632ee03bb1c: Pull complete 
+636ccd115361: Pull complete 
+b07c8fac8eea: Pull complete 
+e44c54db9c14: Pull complete 
+cf9c45749101: Pull complete 
+9f2fa3febc47: Pull complete 
+44d5e1d3c311: Pull complete 
+bb3db2c5d8ec: Pull complete 
+e0ead729abd9: Pull complete 
+Digest: sha256:717e6f25ed8997b7ecb0408e063c4dcba202a68b341ebac4c4d97f51439b87ee
+Status: Downloaded newer image for mysql:latest
+mysql:latest
+[ashu@docker-ce-server ~]$ docker  images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+mysql               latest              2a04bf34fdf0        2 days ago          535MB
+[ashu@docker-ce-server ~]$ 
+
+```
+
+### pulled images from docker hub 
+
+```
+   16  docker  pull openjdk 
+   17  docker  images
+   18  docker  pull  oraclelinux:8.4 
+   19  docker  pull  oraclelinux:9
+   20  history 
+[ashu@docker-ce-server ~]$ docker  images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+mysql               latest              2a04bf34fdf0        2 days ago          535MB
+openjdk             latest              cf6479cba824        2 days ago          464MB
+oraclelinux         9                   781047083117        2 days ago          222MB
+oraclelinux         8.4                 97e22ab49eea        12 months ago       246MB
+[ashu@docker-ce-server ~]$ 
+
+```
+
 
 
