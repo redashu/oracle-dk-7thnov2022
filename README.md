@@ -206,5 +206,36 @@ oraclelinux         8.4                 97e22ab49eea        12 months ago       
    33  docker tag container-registry.oracle.com/java/openjdk:latest   ashuoracle:v1 
 ```
 
+### lets create our first container -- container need something to run 
+
+<img src="cc.png">
+
+### creating first container 
+
+<img src="cc1.png">
+
+### creating 
+
+```
+[ashu@docker-ce-server ~]$ docker  run --name ashuc1  -d   alpine   ping google.com 
+1bd547d9737f668c7d2424c9a5ec33c11aff57db23a5bf05bf0c085916ee036f
+[ashu@docker-ce-server ~]$ docker  ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+2924f7f69496        alpine              "ping google.com"   5 seconds ago       Up 4 seconds                            venkatesc1
+68e913bcaa5a        alpine              "ping google.com"   7 seconds ago       Up 7 seconds                            rubic1
+1bd547d9737f        alpine              "ping google.com"   13 seconds ago      Up 12 seconds                           ashuc1
+aba8276b8857        alpine              "ping google.com"   2 minutes ago       Up 2 minutes                            manjunathc1
+[ashu@docker-ce-server ~]$ 
+
+
+```
+
+
+### checking output of container process 
+
+```
+  49  docker logs HKO 
+   50  docker logs  ashuc1 
+```
 
 
