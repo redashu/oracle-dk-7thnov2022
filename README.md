@@ -306,6 +306,19 @@ bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbi
 
 ```
 
+### removing a stopped container 
+
+```
+[ashu@docker-ce-server ~]$ docker  stop  ashuc1
+ashuc1
+[ashu@docker-ce-server ~]$ docker  rm  ashuc1 
+ashuc1
+```
+
+### container life cycle 
+
+<img src="life.png">
+
 
 
 
