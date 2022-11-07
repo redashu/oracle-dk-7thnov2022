@@ -427,4 +427,64 @@ CMD ["java","hello"]
 # for setting default process 
 ```
 
+### lets build image 
+
+```
+[ashu@docker-ce-server ashuimages]$ ls
+java  python  webapps
+[ashu@docker-ce-server ashuimages]$ 
+[ashu@docker-ce-server ashuimages]$ ls  java/
+Dockerfile  hello.java
+[ashu@docker-ce-server ashuimages]$ docker  build  -t  ashujava:1.1  java/ 
+Sending build context to Docker daemon  3.584kB
+Step 1/8 : FROM openjdk
+Trying to pull repository docker.io/library/openjdk ... 
+latest: Pulling from docker.io/library/openjdk
+feec22b5b798: Already exists 
+ab968c9bcaf0: Pull complete 
+fc9c81bf0e32: Pull complete 
+Digest: sha256:e34cf9a1f6f7f4937f23e6e391b96d1b28fa16d0eeca2d4b131553a00df3add9
+Status: Downloaded newer image for openjdk:latest
+ ---> cf6479cba824
+Step 2/8 : LABEL name=ashutoshh
+ ---> Running in 65c0283dc9c5
+Removing intermediate container 65c0283dc9c5
+ ---> 35640be925c8
+Step 3/8 : LABEL email=ashutoshh@linux.com
+ ---> Running in aab104059d63
+Removing intermediate container aab104059d63
+ ---> a405d54a1740
+Step 4/8 : RUN mkdir /mycode
+ ---> Running in e69c7928c6e1
+Removing intermediate container e69c7928c6e1
+ ---> 5b163795ac70
+Step 5/8 : COPY  hello.java /mycode/hello.java
+ ---> f9f2e8ae18cf
+Step 6/8 : WORKDIR /mycode
+ ---> Running in 7c592d77d5eb
+Removing intermediate container 7c592d77d5eb
+ ---> 7774448e51c2
+Step 7/8 : RUN javac hello.java
+ ---> Running in 9bae2ba420cc
+Removing intermediate container 9bae2ba420cc
+ ---> 4bc44d63d590
+Step 8/8 : CMD ["java","hello"]
+ ---> Running in 603ae79fe050
+Removing intermediate container 603ae79fe050
+ ---> 56c67dfaca7a
+Successfully built 56c67dfaca7a
+Successfully tagged ashujava:1.1
+```
+
+### creating container 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker  run -it  -d  --name ashujc1  ashujava:1.1 
+6cec6c7967b907a2ed8c0753b0e42f2fd684cbf2e3af5f50c1bd1fabe87501a1
+[ashu@docker-ce-server ashuimages]$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+6cec6c7967b9        ashujava:1.1        "java hello"        22 seconds ago      Up 21 seconds                           ashujc1
+```
+
+
 
