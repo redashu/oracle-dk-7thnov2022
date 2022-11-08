@@ -104,6 +104,40 @@ ashupyc1
 [ashu@docker-ce-server ashuimages]$ 
 ```
 
+### alpine based python code dockerfile 
+
+```
+FROM alpine
+label email=ashutoshh@linux.com
+RUN apk add python3 && mkdir /pycodes/
+# alpine is having apk as software installer 
+ADD https://raw.githubusercontent.com/redashu/pythonLang/main/while.py /pycodes/
+WORKDIR /pycodes
+ENTRYPOINT python3 while.py 
+```
+
+### lets build it 
+```
+[ashu@docker-ce-server tasks]$ docker build -t ashualp:pycodev1  -f  alpine.dockerfile  . 
+Sending build context to Docker daemon  2.048kB
+Step 1/6 : FROM alpine
+ ---> 9c6f07244728
+Step 2/6 : label email=ashutoshh@linux.com
+ ---> Running in 31f01ab8d32a
+Removing intermediate container 31f01ab8d32a
+ ---> c9c657472425
+Step 3/6 : RUN apk add python3 && mkdi
+```
+
+### size diff
+
+```
+ashu@docker-ce-server tasks]$ docker images  |  grep ashu 
+ashualp                                        pycodev1            b866ef88a55e        About a minute ago   55.8MB
+ashupython                                     v1                  fe3d3c9e1a1a        47 minutes ago       448MB
+ashujava                                       jdk8_v1             aa8d560c81d5        19 hours ago         652MB
+ashujava                                       1.2
+```
 
 
 
