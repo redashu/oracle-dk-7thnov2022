@@ -225,6 +225,32 @@ Removing login credentials for phx.ocir.io
 [ashu@docker-ce-server tasks]$ 
 ```
 
+### pulling images
+
+```
+[ashu@docker-ce-server tasks]$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+[ashu@docker-ce-server tasks]$ 
+[ashu@docker-ce-server tasks]$ docker pull  phx.ocir.io/axmbtg8judkl/oracleashu:pyappv1
+Trying to pull repository phx.ocir.io/axmbtg8judkl/oracleashu ... 
+pull access denied for phx.ocir.io/axmbtg8judkl/oracleashu, repository does not exist or may require 'docker login': denied: Anonymous users are only allowed read access on public repos
+[ashu@docker-ce-server tasks]$ 
+[ashu@docker-ce-server tasks]$ 
+[ashu@docker-ce-server tasks]$ 
+[ashu@docker-ce-server tasks]$ docker  pull   docker.io/dockerashu/oracleashu:pyappv1 
+Trying to pull repository docker.io/dockerashu/oracleashu ... 
+pyappv1: Pulling from docker.io/dockerashu/oracleashu
+213ec9aee27d: Pull complete 
+b2988275c326: Pull complete 
+3156284dab58: Pull complete 
+Digest: sha256:d6e6eae62be07adee31b2aa1579fbde5927e63aa4de84a860c619f01a95b9950
+Status: Downloaded newer image for dockerashu/oracleashu:pyappv1
+docker.io/dockerashu/oracleashu:pyappv1
+[ashu@docker-ce-server tasks]$ docker  images
+REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
+dockerashu/oracleashu   pyappv1             b866ef88a55e        About an hour ago   55.8MB
+```
+
 
 
 
