@@ -428,6 +428,104 @@ rm: cannot remove 'time.txt': Read-only file system
  09:16:57 up  5:06,  0 users,  load average: 0.33, 0.22, 0.10
  09:17:10 up  5:06,  0 users,  load average: 0.28, 0.21, 0.10
 ```
+### creating a database container with volume 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker  volume  create ashudb-vol1 
+ashudb-vol1
+[ashu@docker-ce-server ashuimages]$ docker  volume  ls
+DRIVER              VOLUME NAME
+local               aishvol-1
+local               ashudb-vol1
+local               ashuvol-1
+local               gitavol-1
+local               hari
+local               manjuvol-1
+local               navneet-1
+local               sbvol-1
+local               sonvol-1
+local               sooryavol-1
+local               venkatvol-1
+[ashu@docker-ce-server ashuimages]$ docker  run  --name  ashudb1 -d -v ashudb-vol1:/var/lib/mysql/  -e MYSQL_ROOT_PASSWORD="Ordb@123"  mysql
+Unable to find image 'mysql:latest' locally
+Trying to pull repository docker.io/library/mysql ... 
+latest: Pulling from docker.io/library/mysql
+feec22b5b798: Pull complete 
+3b33952322b1: Pull complete 
+8632ee03bb1c: Pull complete 
+636ccd115361: Pull complete 
+b07c8fac8eea: Pull complete 
+e44c54db9c14: Pull complete 
+cf9c45749101: Pull complete 
+9f2fa3febc47: Pull complete 
+44d5e1d3c311: Pull complete 
+bb3db2c5d8ec: Pull complete 
+e0ead729abd9: Pull complete 
+Digest: sha256:717e6f25ed8997b7ecb0408e063c4dcba202a68b341ebac4c4d97f51439b87ee
+Status: Downloaded newer image for mysql:latest
+e2719aea4f748a4744d912d6ce537d6e96a1dff5cfad1743d38828b3c72fa3cf
+[ashu@docker-ce-server ashuimages]$ docker  ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                 NAMES
+2b22b04b89c3        mysql               "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        3306/tcp, 33060/tcp   sbdb1
+e2719aea4f74        mysql               "docker-entrypoint.s…"   13 seconds ago      Up 3 seconds        3306/tcp, 33060/tcp   ashudb1
+[ashu@docker-ce-server ashuimages]$ 
+```
+
+### access db container and create some databases 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker  exec -it  ashudb1  bash 
+bash-4.4# 
+bash-4.4# mysql -u root -P
+mysql: [ERROR] mysql: option '-P' requires an argument.
+bash-4.4# mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.31 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> create  database hello-oracle;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-oracle' at line 1
+mysql> create  database hellooracle;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| hellooracle        |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> exit;
+Bye
+bash-4.4# exit
+[ashu@docker-ce-server ashuimages]$ 
+```
+
 
 
 
