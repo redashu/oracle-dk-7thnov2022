@@ -526,6 +526,19 @@ bash-4.4# exit
 [ashu@docker-ce-server ashuimages]$ 
 ```
 
+### lets clean up 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker kill ashudb1 
+ashudb1
+[ashu@docker-ce-server ashuimages]$ docker rm ashudb1 
+ashudb1
+[ashu@docker-ce-server ashuimages]$ docker volume rm ashuvol-1 
+ashuvol-1
+[ashu@docker-ce-server ashuimages]$ 
+[ashu@docker-ce-server ashuimages]$ 
+```
+
 
 
 
