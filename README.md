@@ -66,6 +66,45 @@ ashujava                                       1.2                 7a5157c011f5 
 ashujava                                       1.1                 56c67dfaca7a        18 hours ago        464MB
 ```
 
+### creating container 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker run -itd  --name ashupyc1  ashupython:v1  
+03715d1e0a3d8ceac97c9797b2d1ac4bc6e8b3689b0e5a1b8fd0e2da131a3d32
+[ashu@docker-ce-server ashuimages]$ docker  ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+62c40dfb90ab        gitapython:v1       "python3 while.py"       7 seconds ago       Up 3 seconds                            gitanjalic1
+a0132d910d73        sooryapython:v1     "python3 /newcode/wh…"   8 seconds ago       Up 3 seconds                            soopythonc
+aa0b1a6e1da7        99bda13f92d2        "python3 /newcode/wh…"   8 seconds ago       Up 3 seconds                            manjunathpythonc1
+03715d1e0a3d        ashupython:v1       "python3 while.py"       11 seconds ago      Up 3 seconds                            ashupyc1
+```
+
+### checking logs 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker  ps  |   grep ashu
+03715d1e0a3d        ashupython:v1       "python3 while.py"       56 seconds ago      Up 48 seconds                           ashupyc1
+[ashu@docker-ce-server ashuimages]$ docker logs  ashupyc1 
+Hello all , welcome to python..!!
+Welcome to LnB..
+Welcome to Containers ..!!
+______________________
+Hello all , welcome to python..!!
+Welcome to LnB..
+```
+
+### lets clean up 
+
+```
+  159  history 
+[ashu@docker-ce-server ashuimages]$ docker  kill ashupyc1 
+ashupyc1
+[ashu@docker-ce-server ashuimages]$ docker rm ashupyc1 
+ashupyc1
+[ashu@docker-ce-server ashuimages]$ 
+```
+
+
 
 
 
