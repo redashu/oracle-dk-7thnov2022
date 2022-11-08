@@ -251,7 +251,183 @@ REPOSITORY              TAG                 IMAGE ID            CREATED         
 dockerashu/oracleashu   pyappv1             b866ef88a55e        About an hour ago   55.8MB
 ```
 
+## Introduciton Docker volume as an Storage object ..
 
+<img src="stob.png">
+
+### shell script to generate data 
+
+```
+#!/bin/sh
+mkdir -p /mnt/data
+while [ true ]
+do
+    date  >>/mnt/data/time.txt 
+    sleep 10
+    uptime  >>/mnt/data/load.txt 
+    sleep 3 
+done
+```
+
+### Dockerfile 
+
+```
+FROM alpine
+label name=ashutoshh
+add  datagen.sh /opt/
+WORKDIR /opt
+RUN chmod +x datagen.sh 
+ENTRYPOINT ["./datagen.sh"]
+
+```
+
+### lets build image 
+
+```
+[ashu@docker-ce-server ashuimages]$ ls
+java  python  storage  tasks  webapps
+[ashu@docker-ce-server ashuimages]$ docker build -t ashustorage:v1  storage/
+Sending build context to Docker daemon  3.072kB
+Step 1/6 : FROM alpine
+ ---> 9c6f07244728
+Step 2/6 : label name=ashutoshh
+ ---> Using cache
+ ---> 3fbf18284e62
+Step 3/6 : add  datagen.sh /opt/
+ ---> 365cc5778c16
+Step 4/6 : WORKDIR /opt
+ ---> Running in e66305869e95
+Removing intermediate container e66305869e95
+ ---> 53edcdf89635
+Step 5/6 : RUN chmod +x datagen.sh
+ ---> Running in 432ef502e36d
+Removing intermediate container 432ef502e36d
+ ---> 7b05b995ccfa
+Step 6/6 : ENTRYPOINT ["./datagen.sh"]
+ ---> Running in f639c41addc9
+Removing intermediate container f639c41addc9
+ ---> 97bc1dfcde59
+Successfully built 97bc1dfcde59
+Successfully tagged ashustorage:v1
+```
+
+### creating container 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker images  |   grep ashu
+ashustorage                             v1                  97bc1dfcde59        3 minutes ago        5.54MB
+dockerashu/oracleashu                   pyappv1             b866ef88a55e        3 hours ago          55.8MB
+[ashu@docker-ce-server ashuimages]$ docker  run -itd --name ashutest1  ashustorage:v1 
+2051400c0fcbc37d7d4652af49e63fe7e7257d9398c9e292bfb5df741ccb63fa
+[ashu@docker-ce-server ashuimages]$ docker  ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+2051400c0fcb        ashustorage:v1      "./datagen.sh"      4 seconds ago       Up 2 seconds                            ashutest1
+[ashu@docker-ce-server ashuimages]$ 
+
+```
+### checking data 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker  exec  -it  ashutest1  sh 
+/opt # 
+/opt # ls
+datagen.sh
+/opt # cd  /mnt/data/
+/mnt/data # ls
+load.txt  time.txt
+/mnt/data # cat time.txt 
+Tue Nov  8 09:04:35 UTC 2022
+Tue Nov  8 09:04:48 UTC 2022
+Tue Nov  8 09:05:01 UTC 2022
+Tue Nov  8 09:05:14 UTC 2022
+Tue Nov  8 09:05:27 UTC 2022
+Tue Nov  8 09:05:40 UTC 2022
+Tue Nov  8 09:05:53 UTC 2022
+Tue Nov  8 09:06:06 UTC 2022
+Tue Nov  8 09:06:19 UTC 2022
+/mnt/data # cat  load.txt 
+ 09:04:45 up  4:54,  0 users,  load average: 0.56, 0.15, 0.04
+ 09:04:58 up  4:54,  0 users,  load average: 0.50, 0.16, 0.05
+ 09:05:11 up  4:54,  0 users,  load average: 0.39, 0.15, 0.04
+ 09:05:24 up  4:55,  0 users,  load average: 0.33, 0.14, 0.04
+ 09:05:37 up  4:55,  0 users,  load average: 0.25, 0.14, 0.04
+ 09:05:50 up  4:55,  0 users,  load average: 0.36, 0.16, 0.05
+ 09:06:03 up  4:55,  0 users,  load average: 0.28, 0.16, 0.05
+ 09:06:16 up  4:56,  0 users,  load average: 0.22, 0.15, 0.05
+ 09:06:29 up  4:56,  0 users,  load average: 0.18, 0.14, 0.05
+```
+
+### creating volume 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker  volume  ls
+DRIVER              VOLUME NAME
+[ashu@docker-ce-server ashuimages]$ docker  volume  create  ashuvol-1
+ashuvol-1
+[ashu@docker-ce-server ashuimages]$ docker  volume  ls
+DRIVER              VOLUME NAME
+local               ashuvol-1
+[ashu@docker-ce-server ashuimages]$ docker volume inspect ashuvol-1 
+[
+    {
+        "CreatedAt": "2022-11-08T09:11:26Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/docker/volumes/ashuvol-1/_data",
+        "Name": "ashuvol-1",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+```
+
+### creating container with volume 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker  volume  ls
+DRIVER              VOLUME NAME
+local               aishvol-1
+local               ashuvol-1
+local               gitavol-1
+local               manjuvol-1
+local               sonvol-1
+local               sooryavol-1
+local               venkatvol-1
+[ashu@docker-ce-server ashuimages]$ docker  run -itd --name ashutest1   -v  ashuvol-1:/mnt/data/:rw       ashustorage:v1 
+9d6f1dc0227635aa9a26a0317b53e13c123cf62495fdca2109535475fe2ead91
+[ashu@docker-ce-server ashuimages]$ 
+[ashu@docker-ce-server ashuimages]$ docker  ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+9d6f1dc02276        ashustorage:v1      "./datagen.sh"      5 seconds ago       Up 5 seconds                            ashutest1
+3f6d283a3fc6        manjustorage:1.0    "./datagen.sh"      20 seconds ago      Up 19 seconds                           manjutest1
+[ashu@docker-ce-server ashuimages]$ 
+[ashu@docker-ce-server ashuimages]$ 
+```
+
+### lets check volume for data present 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker  run -it --rm  -v  ashuvol-1:/tmp/mydata:ro   oraclelinux:8.4   bash 
+Unable to find image 'oraclelinux:8.4' locally
+Trying to pull repository docker.io/library/oraclelinux ... 
+8.4: Pulling from docker.io/library/oraclelinux
+a4df6f21af84: Pull complete 
+Digest: sha256:b81d5b0638bb67030b207d28586d0e714a811cc612396dbe3410db406998b3ad
+Status: Downloaded newer image for oraclelinux:8.4
+[root@85bf189a54c6 /]# 
+[root@85bf189a54c6 /]# 
+[root@85bf189a54c6 /]# cd  /tmp/mydata/
+[root@85bf189a54c6 mydata]# ls
+load.txt  time.txt
+[root@85bf189a54c6 mydata]# rm time.txt 
+rm: remove regular file 'time.txt'? y
+rm: cannot remove 'time.txt': Read-only file system
+[root@85bf189a54c6 mydata]# cat  load.txt 
+ 09:16:31 up  5:06,  0 users,  load average: 0.42, 0.22, 0.10
+ 09:16:44 up  5:06,  0 users,  load average: 0.43, 0.23, 0.10
+ 09:16:57 up  5:06,  0 users,  load average: 0.33, 0.22, 0.10
+ 09:17:10 up  5:06,  0 users,  load average: 0.28, 0.21, 0.10
+```
 
 
 
