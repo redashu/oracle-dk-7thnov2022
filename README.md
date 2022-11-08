@@ -139,6 +139,59 @@ ashujava                                       jdk8_v1             aa8d560c81d5 
 ashujava                                       1.2
 ```
 
+### Docker registires 
+
+<img src="docker_reg.png">
+
+### Image name reality 
+
+<img src="name.png">
+
+###  how image pull is happening 
+
+```
+[root@docker-ce-server ~]# docker  pull  openjdk 
+Using default tag: latest
+Trying to pull repository docker.io/library/openjdk ... 
+latest: Pulling from docker.io/library/openjdk
+Digest: sha256:e34cf9a1f6f7f4937f23e6e391b96d1b28fa16d0eeca2d4b131553a00df3add9
+Status: Downloaded newer image for openjdk:latest
+openjdk:latest
+[root@docker-ce-server ~]# 
+[root@docker-ce-server ~]# docker  pull  docker.io/library:openjdk:latest 
+
+```
+
+### pushing image on docker hub 
+
+```
+[ashu@docker-ce-server tasks]$ docker  images  |   grep ashu
+ashualp                                        pycodev1            b866ef88a55e        About an hour ago   55.8MB
+ashupython                                     v1                  fe3d3c9e1a1a        2 hours ago         448MB
+ashujava                                       jdk8_v1             aa8d560c81d5        20 hours ago        652MB
+ashujava                                       1.2                 7a5157c011f5        20 hours ago        464MB
+[ashu@docker-ce-server tasks]$ 
+[ashu@docker-ce-server tasks]$ docker  tag  ashualp:pycodev1   docker.io/dockerashu/oracleashu:pyappv1 
+[ashu@docker-ce-server tasks]$ docker  login 
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: dockerashu
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ashu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[ashu@docker-ce-server tasks]$ docker  push  docker.io/dockerashu/oracleashu:pyappv1 
+The push refers to repository [docker.io/dockerashu/oracleashu]
+b39fe6960a1f: Pushed 
+da48a2b7529f: Pushed 
+994393dc58e7: Mounted from library/alpine 
+pyappv1: digest: sha256:d6e6eae62be07adee31b2aa1579fbde5927e63aa4de84a860c619f01a95b9950 size: 947
+[ashu@docker-ce-server tasks]$ docker logout 
+Removing login credentials for https://index.docker.io/v1/
+```
+
+
 
 
 
