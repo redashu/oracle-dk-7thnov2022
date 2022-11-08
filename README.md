@@ -539,6 +539,141 @@ ashuvol-1
 [ashu@docker-ce-server ashuimages]$ 
 ```
 
+## Networking in containers 
+
+### Intro to container Networking model 
+
+<img src="cn.png">
+
+### Intro to Docker bridge 
+
+<img src="br.png">
+
+### listing docker network bridge 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker  network  ls 
+NETWORK ID          NAME                DRIVER              SCOPE
+12ecbe47c660        bridge              bridge              local
+61e2e20c26dd        host                host                local
+424ed77057ea        none                null                local
+[ashu@docker-ce-server ashuimages]$ docker network inspect  bridge 
+[
+    {
+        "Name": "bridge",
+        "Id": "12ecbe47c660368df21c4f2988c6e7bc60b5f95419a55725909bd54d5e774484",
+        "Created": "2022-11-08T04:10:24.837141325Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {},
+        "Options": {
+            "com.docker.network.bridge.default_bridge": "true",
+            "com.docker.network.bridge.enable_icc": "true",
+            "com.docker.network.bridge.enable_ip_masquerade": "true",
+            "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+            "com.docker.network.bridge.name": "docker0",
+            "com.docker.network.driver.mtu": "1500"
+        },
+        "Labels": {}
+    }
+```
+
+### creating container and listing network 
+
+```
+[ashu@docker-ce-server ashuimages]$ docker run -itd --name ashuc1  alpine sleep 1000 
+637afa254dbe23ca33dc316e9b7a1abc490d4777000ece6c1929b96ecc14acea
+[ashu@docker-ce-server ashuimages]$ 
+[ashu@docker-ce-server ashuimages]$ docker  ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+637afa254dbe        alpine              "sleep 1000"        8 seconds ago       Up 7 seconds                            ashuc1
+[ashu@docker-ce-server ashuimages]$ docker network inspect  bridge 
+[
+    {
+        "Name": "bridge",
+        "Id": "12ecbe47c660368df21c4f2988c6e7bc60b5f95419a55725909bd54d5e774484",
+        "Created": "2022-11-08T04:10:24.837141325Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "637afa254dbe23ca33dc316e9b7a1abc490d4777000ece6c1929b96ecc14acea": {
+                "Name": "ashuc1",
+                "EndpointID": "f93338763e847546e30a53471f04104aad26fa52369f333b2ca27129bd03394f",
+                "MacAddress": "02:42:ac:11:00:02",
+                "IPv4Address": "172.17.0.2/16",
+                "IPv6Address": ""
+```
+
+### containers in same bridge can communicate to each other 
+
+```
+root@docker-ce-server ~]# docker  exec -it ashuc1 sh 
+/ # ifconfig 
+eth0      Link encap:Ethernet  HWaddr 02:42:AC:11:00:02  
+          inet addr:172.17.0.2  Bcast:172.17.255.255  Mask:255.255.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:19 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:1366 (1.3 KiB)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ # ping  172.17.0.3
+PING 172.17.0.3 (172.17.0.3): 56 data bytes
+64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.104 ms
+64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.075 ms
+64 bytes from 172.17.0.3: seq=2 ttl=64 time=0.060 ms
+^C
+--- 172.17.0.3 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.060/0.079/0.104 ms
+/ # exit
+
+```
+
 
 
 
