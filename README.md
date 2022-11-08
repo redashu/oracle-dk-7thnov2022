@@ -674,6 +674,14 @@ round-trip min/avg/max = 0.060/0.079/0.104 ms
 
 ```
 
+### NAT in docker bridge and host interface 
+
+<img src="nat.png">
+
+### port forwarding 
+
+<img src="portf.png">
+
 
 
 
