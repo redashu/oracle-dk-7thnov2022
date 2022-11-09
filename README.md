@@ -386,6 +386,30 @@ Removing login credentials for https://index.docker.io/v1/
 
 ```
 
+### cleaning up 
+
+```
+ 152  docker rm $(docker ps -aq) -f
+  153  docker rmi $(docker images -q) -f
+  154  docker volume prune
+  155  docker network prune 
+  156  history 
+[root@docker-ce-server ~]# docker  ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+[root@docker-ce-server ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+[root@docker-ce-server ~]# docker volume ls
+DRIVER              VOLUME NAME
+[root@docker-ce-server ~]# docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+12ecbe47c660        bridge              bridge              local
+61e2e20c26dd        host                host                local
+424ed77057ea        none                null                local
+[root@docker-ce-server ~]# 
+
+```
+
+
 
 
 
