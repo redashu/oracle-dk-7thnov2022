@@ -37,7 +37,81 @@ _data
 [volume](https://docs.docker.com/storage/volumes/)
 
 
-### DOcker networking --
+## Webapp contiainerization 
+
+### Dockerfile
+
+<img src="dockerfile.png">
+
+### nginx iNfo 
+
+<img src="nginx.png">
+
+### taking sample html based web app 
+
+```
+[ashu@docker-ce-server webapps]$ git clone https://github.com/schoolofdevops/html-sample-app.git
+Cloning into 'html-sample-app'...
+remote: Enumerating objects: 74, done.
+remote: Total 74 (delta 0), reused 0 (delta 0), pack-reused 74
+Unpacking objects: 100% (74/74), done.
+[ashu@docker-ce-server webapps]$ ls
+html-sample-app
+[ashu@docker-ce-server webapps]$ 
+```
+
+### Dockerfile 
+
+```
+FROM nginx
+LABEL name=ashutoshh
+COPY html-sample-app /usr/share/nginx/html/
+# using copy or add we can copy entire Folder data also
+# Note: if we are not using CMD /ENTRYPOINT then base image CMD /entrypoint will be 
+# inherited
+```
+
+### lets build image 
+
+```
+[ashu@docker-ce-server webapps]$ ls
+Dockerfile  html-sample-app
+[ashu@docker-ce-server webapps]$ docker build -t  ashunginx:appv1 . 
+Sending build context to Docker daemon  3.744MB
+Step 1/3 : FROM nginx
+Trying to pull repository docker.io/library/nginx ... 
+latest: Pulling from docker.io/library/nginx
+e9995326b091: Pull complete 
+71689475aec2: Pull complete 
+f88a23025338: Pull complete 
+0df440342e26: Pull complete 
+eef26ceb3309: Pull complete 
+8e3ed6a9e43a: Pull complete 
+Digest: sha256:943c25b4b66b332184d5ba6bb18234273551593016c0e0ae906bab111548239f
+Status: Downloaded newer image for nginx:latest
+ ---> 76c69feac34e
+Step 2/3 : LABEL name=ashutoshh
+ ---> Running in 519e59b2abeb
+Removing intermediate container 519e59b2abeb
+ ---> d9a2ee99cb68
+Step 3/3 : COPY html-sample-app /usr/share/nginx/html/
+ ---> 8d86b31cd611
+Successfully built 8d86b31cd611
+Successfully tagged ashunginx:appv1
+```
+
+### checking image 
+
+```
+321  docker build -t  ashunginx:appv1 . 
+  322  history 
+[ashu@docker-ce-server webapps]$ docker images  |   grep ashu
+ashunginx                               appv1               8d86b31cd611        34 seconds ago      145MB
+ashustorage                             v1                  97bc1dfcde59        20 hours ago        5.54MB
+dockerashu/oracleashu                   pyappv1             b866ef88a55e        23 hours ago        55.8MB
+[ashu@docker-ce-server webapps]$ 
+```
+
 
 
 
