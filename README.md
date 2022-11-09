@@ -409,6 +409,18 @@ NETWORK ID          NAME                DRIVER              SCOPE
 
 ```
 
+## Understanding container orchestration problems 
+
+<img src="prob.png">
+
+### COntainer orchestration Engines 
+
+<img src="carch.png">
+
+### info about K8s 
+
+<img src="k8s.png">
+
 
 
 
