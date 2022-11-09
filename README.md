@@ -222,6 +222,51 @@ ashuwebc111         "/docker-entrypoint.…"   ashuwebapp          running      
 ```
 
 
+### Compose example 2
+
+```
+version: '3.8'
+volumes: # to create volume
+  ashudb-vol009: # name of volume 
+services:
+  ashuapp1:
+    image: alpine
+    container_name: ashuc111
+    command: ping fb.com 
+  ashuapp2:
+    image: mysql
+    container_name: ashudbc1 
+    environment:
+      MYSQL_ROOT_PASSWORD: "Oracle@098#"
+    volumes: # attaching volume 
+    - "ashudb-vol009:/var/lib/mysql/"
+
+```
+
+### lets run it 
+
+```
+[ashu@docker-ce-server ashu-compose]$ docker-compose down 
+[ashu@docker-ce-server ashu-compose]$ ls
+docker-compose.yaml  multic.yaml
+[ashu@docker-ce-server ashu-compose]$ docker-compose -f multic.yaml  up  -d 
+[+] Running 4/4
+ ⠿ Network ashu-compose_default         Created                                                    0.1s
+ ⠿ Volume "ashu-compose_ashudb-vol009"  Created                                                    0.0s
+ ⠿ Container ashudbc1                   Started                                                    0.9s
+ ⠿ Container ashuc111                   Started                                                    0.9s
+[ashu@docker-ce-server ashu-compose]$ docker-compose -f multic.yaml ps 
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashuc111            "ping fb.com"            ashuapp1            running             
+ashudbc1            "docker-entrypoint.s…"   ashuapp2            running             3306/tcp, 33060/tcp
+[ashu@docker-ce-server ashu-compose]$ docker-compose -f multic.yaml  down 
+[+] Running 3/3
+ ⠿ Container ashudbc1            Removed                                                           1.6s
+ ⠿ Container ashuc111            Removed                                                          10.5s
+ ⠿ Network ashu-compose_default  Removed                                                           0.1s
+[ashu@docker-ce-server ashu-compose]$ 
+```
+
 
 
 
