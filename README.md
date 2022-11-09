@@ -267,6 +267,91 @@ ashudbc1            "docker-entrypoint.s…"   ashuapp2            running      
 [ashu@docker-ce-server ashu-compose]$ 
 ```
 
+### more compose examples 
+
+```
+[ashu@docker-ce-server ashu-compose]$ docker-compose -f multic.yaml  up -d 
+[+] Running 3/3
+ ⠿ Network ashu-compose_default  Created                                                           0.1s
+ ⠿ Container ashudbc1            Started                                                           0.8s
+ ⠿ Container ashuc111            Started                                                           0.9s
+[ashu@docker-ce-server ashu-compose]$ docker-compose -f multic.yaml  ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashuc111            "ping fb.com"            ashuapp1            running             
+ashudbc1            "docker-entrypoint.s…"   ashuapp2            running             3306/tcp, 33060/tcp
+[ashu@docker-ce-server ashu-compose]$ docker-compose -f multic.yaml  stop 
+[+] Running 2/2
+ ⠿ Container ashuc111  Stopped                                                                    10.4s
+ ⠿ Container ashudbc1  Stopped                                                                     1.1s
+[ashu@docker-ce-server ashu-compose]$ docker-compose -f multic.yaml  start ashuapp2
+[+] Running 1/1
+ ⠿ Container ashudbc1  Started                                                                     0.6s
+[ashu@docker-ce-server ashu-compose]$ docker-compose -f multic.yaml  ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashuc111            "ping fb.com"            ashuapp1            exited (137)        
+ashudbc1            "docker-entrypoint.s…"   ashuapp2            running             3306/tcp, 33060/tcp
+[ashu@docker-ce-server ashu-compose]$ 
+```
+
+### final compose example 
+
+```
+version: '3.8'
+volumes: # to create volume
+  ashudb-vol009: # name of volume 
+services:
+  ashuapp3: 
+    image: ashunginx:appv001 # this image i want to build 
+    build: # call dockerfile 
+      context: ../webapps # location of dockerfile 
+      dockerfile: Dockerfile # name of Dockerfile 
+    container_name: ashuwebcc999 
+    ports:
+    - 1234:80 
+  ashuapp1:
+    image: alpine
+    container_name: ashuc111
+    command: ping fb.com 
+  ashuapp2:
+    image: mysql
+    container_name: ashudbc1 
+    environment:
+      MYSQL_ROOT_PASSWORD: "Oracle@098#"
+    volumes: # attaching volume 
+    - "ashudb-vol009:/var/lib/mysql/"
+
+```
+
+### lets run it 
+
+```
+[ashu@docker-ce-server ashu-compose]$ docker-compose -f multic.yaml up -d --build 
+[+] Building 1.0s (7/7) FINISHED                                                                        
+ => [internal] load .dockerignore                                                                  0.0s
+ => => transferring context: 2B                                                                    0.0s
+ => [internal] load build definition from Dockerfile                                               0.0s
+ => => transferring dockerfile: 326B                                                               0.0s
+ => [internal] load metadata for docker.io/library/nginx:latest                                    0.0s
+ => [internal] load build context                                                                  0.1s
+ => => transferring context: 3.61MB                                                                0.0s
+ => [1/2] FROM docker.io/library/nginx                                                             0.0s
+ => => resolve docker.io/library/nginx:latest                                                      0.0s
+ => [2/2] COPY html-sample-app /usr/share/nginx/html/                                              0.1s
+ => exporting to image                                                                             0.9s
+ => => exporting layers                                                                            0.9s
+ => => writing image sha256:a6be2b5f496d1387762761dd8e9f4e11456288df337c9611c8b893278a591769       0.0s
+ => => naming to docker.io/library/ashunginx:appv001                                               0.0s
+[+] Running 3/3
+ ⠿ Container ashuwebcc999  Started                                                                 0.6s
+ ⠿ Container ashudbc1      Running                                                                 0.0s
+ ⠿ Container ashuc111      Running                                                                 0.0s
+[ashu@docker-ce-server ashu-compose]$ docker-compose -f multic.yaml ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashuc111            "ping fb.com"            ashuapp1            running             
+ashudbc1            "docker-entrypoint.s…"   ashuapp2            running             3306/tcp, 33060/tcp
+ashuwebcc999        "/docker-entrypoint.…"   ashuapp3            running             0.0.0.0:1234->80/tcp
+```
+
 
 
 
