@@ -421,6 +421,15 @@ NETWORK ID          NAME                DRIVER              SCOPE
 
 <img src="k8s.png">
 
+### k8s arch 1 
+
+<img src="k8sarch1.png">
+
+### method for setting k8s cluster 
+
+<img src="cluster.png">
+
+
 
 
 
