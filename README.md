@@ -112,6 +112,33 @@ dockerashu/oracleashu                   pyappv1             b866ef88a55e        
 [ashu@docker-ce-server webapps]$ 
 ```
 
+### creating port mapping 
+
+```
+ashu@docker-ce-server webapps]$ docker run -d --name ashuwebc1 -p 1234:80 ashunginx:appv1  
+ff6b8e99a78323a48c9f55f518120cb06a30a7da01a2278c5d29bcad15ffca68
+[ashu@docker-ce-server webapps]$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+2d5a936b8602        gitanx:appv1        "/docker-entrypoint.…"   5 seconds ago       Up 4 seconds        0.0.0.0:1029->80/tcp   gitawebc1
+ff6b8e99a783        ashunginx:appv1     "/docker-entrypoint.…"   7 seconds ago       Up 6 seconds        0.0.0.0:1234->80/tcp   ashuwebc1
+```
+
+### Cgroups in Docker 
+
+<img src="cg.png">
+
+### putting memory limit in container 
+
+```
+[ashu@docker-ce-server webapps]$ docker run -d --name ashuwebc1 -p 1234:80  --memory 2G     ashunginx:appv1  
+691021eb182f11ce44c53e33c70d17d490451f2e041ea0a79a233a56976f4ece
+```
+
+### cpu shares 
+
+<img src="share.png">
+
+
 
 
 
