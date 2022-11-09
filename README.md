@@ -41,7 +41,7 @@ _data
 
 ### Dockerfile
 
-<img src="dockerfile.png">
+<img src="ep.png">
 
 ### nginx iNfo 
 
