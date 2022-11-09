@@ -429,6 +429,52 @@ NETWORK ID          NAME                DRIVER              SCOPE
 
 <img src="cluster.png">
 
+### INstalling k8s client software on CLient machine on LInux  -- kubectl 
+
+```
+[root@docker-ce-server ~]# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   138  100   138    0     0    788      0 --:--:-- --:--:-- --:--:--   788
+100 42.9M  100 42.9M    0     0  29.5M      0  0:00:01  0:00:01 --:--:-- 71.9M
+[root@docker-ce-server ~]# ls
+kubectl
+[root@docker-ce-server ~]# mv kubectl  /usr/bin/
+[root@docker-ce-server ~]# chmod  +x /usr/bin/kubectl 
+[root@docker-ce-server ~]# 
+[root@docker-ce-server ~]# kubectl  version --client 
+WARNING: This version information is deprecated and will be replaced with the output from kubectl version --short.  Use --output=yaml|json to get the full version.
+Client Version: version.Info{Major:"1", Minor:"25", GitVersion:"v1.25.3", GitCommit:"434bfd82814af038ad94d62ebe59b133fcb50506", GitTreeState:"clean", BuildDate:"2022-10-12T10:57:26Z", GoVersion:"go1.19.2", Compiler:"gc", Platform:"linux/amd64"}
+Kustomize Version: v4.5.7
+[root@docker-ce-server ~]# 
+
+```
+
+### Installing on MAC 
+
+```
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   138  100   138    0     0    349      0 --:--:-- --:--:-- --:--:--   348
+100 47.8M  100 47.8M    0     0  6054k      0  0:00:08  0:00:08 --:--:-- 7077k
+fire@ashutoshhs-MacBook-Air ~ % 
+fire@ashutoshhs-MacBook-Air ~ % 
+fire@ashutoshhs-MacBook-Air ~ % sudo mv kubectl /usr/local/bin 
+Password:
+fire@ashutoshhs-MacBook-Air ~ % sudo chmod +x /usr/local/bin/kubectl
+fire@ashutoshhs-MacBook-Air ~ % 
+fire@ashutoshhs-MacBook-Air ~ % kubectl version --client 
+WARNING: This version information is deprecated and will be replaced with the output from kubectl version --short.  Use --output=yaml|json to get the full version.
+Client Version: version.Info{Major:"1", Minor:"25", GitVersion:"v1.25.3", GitCommit:"434bfd82814af038ad94d62ebe59b133fcb50506", GitTreeState:"clean", BuildDate:"2022-10-12T10:57:26Z", GoVersion:"go1.19.2", Compiler:"gc", Platform:"darwin/amd64"}
+Kustomize Version: v4.5.7
+
+```
+
+### kubectl download LINK 
+
+[Download](https://kubernetes.io/docs/tasks/tools/)
+
 
 
 
