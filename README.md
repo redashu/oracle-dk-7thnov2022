@@ -138,6 +138,89 @@ ff6b8e99a783        ashunginx:appv1     "/docker-entrypoint.…"   7 seconds ago
 
 <img src="share.png">
 
+## Docker compose -- to Scriptify all docker instructions
+
+### compose info 
+
+<img src="info.png">
+
+### installing docker-compose 
+
+```
+[root@docker-ce-server ~]# curl -SL https://github.com/docker/compose/releases/download/v2.12.2/docker-compose-linux-x86_64  -o /usr/bin/docker-compose 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 42.8M  100 42.8M    0     0  7383k      0  0:00:05  0:00:05 --:--:-- 7168k
+[root@docker-ce-server ~]# 
+[root@docker-ce-server ~]# 
+[root@docker-ce-server ~]# chmod +x /usr/bin/docker-compose 
+[root@docker-ce-server ~]# docker-compose version 
+Docker Compose version v2.12.2
+[root@docker-ce-server ~]# 
+
+```
+
+### compose file example 1
+
+```
+version: '3.8' # compose file latest version 
+services: # write app component 
+  ashuwebapp:
+    image: ashunginx:appv1 # docker image 
+    container_name: ashuwebc111 # name of container 
+    ports: # port mapping
+    - "1234:80"
+   
+```
+
+### running compose file 
+
+```
+[ashu@docker-ce-server ashuimages]$ ls
+ashu-compose  java  python  storage  tasks  webapps
+[ashu@docker-ce-server ashuimages]$ cd  ashu-compose/
+[ashu@docker-ce-server ashu-compose]$ ls
+docker-compose.yaml
+[ashu@docker-ce-server ashu-compose]$ docker-compose up -d 
+[+] Running 2/2
+ ⠿ Network ashu-compose_default  Created                                                           0.1s
+ ⠿ Container ashuwebc111         Started                                                           0.7s
+[ashu@docker-ce-server ashu-compose]$ docker-compose ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashuwebc111         "/docker-entrypoint.…"   ashuwebapp          running             0.0.0.0:1234->80/tcp
+```
+
+### more compose operations 
+
+```
+[ashu@docker-ce-server ashu-compose]$ docker-compose ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashuwebc111         "/docker-entrypoint.…"   ashuwebapp          running             0.0.0.0:1234->80/tcp
+[ashu@docker-ce-server ashu-compose]$ docker-compose  stop 
+[+] Running 1/1
+ ⠿ Container ashuwebc111  Stopped                                                                                             0.5s
+[ashu@docker-ce-server ashu-compose]$ docker-compose ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashuwebc111         "/docker-entrypoint.…"   ashuwebapp          exited (0)          
+[ashu@docker-ce-server ashu-compose]$ docker-compose start
+[+] Running 1/1
+ ⠿ Container ashuwebc111  Started                                                                                             0.4s
+[ashu@docker-ce-server ashu-compose]$ docker-compose ps
+NAME                COMMAND                  SERVICE             STATUS              PORTS
+ashuwebc111         "/docker-entrypoint.…"   ashuwebapp          running             0.0.0.0:1234->80/tcp
+[ashu@docker-ce-server ashu-compose]$ 
+```
+
+### clean up 
+
+```
+[ashu@docker-ce-server ashu-compose]$ docker-compose down 
+[+] Running 2/2
+ ⠿ Container ashuwebc111         Removed                                                                                      0.5s
+ ⠿ Network ashu-compose_default  Removed       
+```
+
 
 
 
