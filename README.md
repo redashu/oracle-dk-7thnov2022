@@ -476,6 +476,14 @@ Kustomize Version: v4.5.7
 [Download](https://kubernetes.io/docs/tasks/tools/)
 
 
+### DOCKER IMAGE will be deployed in form of Pods 
+
+<img src="pod.png">
+
+### Design Pod 
+
+<img src="podd.png">
+
 
 
 
