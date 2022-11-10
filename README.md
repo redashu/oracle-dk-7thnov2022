@@ -855,3 +855,25 @@ NAME              READY   STATUS    RESTARTS   AGE
 ashu-rc-1-9bph6   1/1     Running   0          3s
 ```
 
+### checking service updates on pod scale 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  svc 
+NAME      TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+ashulb3   NodePort   10.100.250.31   <none>        8080:32537/TCP   14m
+[ashu@docker-ce-server k8s-app-deploy]$ 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get   endpoints 
+NAME      ENDPOINTS              AGE
+ashulb3   192.168.179.232:8080   14m
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  scale rc  ashu-rc-1   --replicas=2
+replicationcontroller/ashu-rc-1 scaled
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  po -o wide 
+NAME              READY   STATUS    RESTARTS   AGE    IP                NODE      NOMINATED NODE   READINESS GATES
+ashu-rc-1-9bph6   1/1     Running   0          110s   192.168.179.232   minion2   <none>           <none>
+ashu-rc-1-p4292   1/1     Running   0          6s     192.168.34.59     minion1   <none>           <none>
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get   endpoints 
+NAME      ENDPOINTS                                 AGE
+ashulb3   192.168.179.232:8080,192.168.34.59:8080   15m
+```
+
+
