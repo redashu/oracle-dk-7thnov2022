@@ -738,3 +738,83 @@ ashupypod1   1/1     Running   0          13s
 
 
 ```
+
+## Intro to COntrollers in k8s 
+
+### Replication controller 
+
+<img src="rc.png">
+
+### RC yaml 
+
+<img src="rc1.png">
+
+### YAML 
+
+```
+apiVersion: v1
+kind: ReplicationController 
+metadata:
+  name: ashu-rc-1 # name of RC 
+  namespace: ashu-project # namespace info 
+spec: 
+  replicas: 1 
+  template: # using template to create pod 
+    metadata:
+      labels: # tag to app
+        x1: ashuapp 
+    spec: 
+      containers: 
+      - name: ashuc1
+        image: docker.io/dockerashu/ashujavaweb:appv1
+        ports:
+        - containerPort: 8080 
+```
+
+### creating rc and rc will create pod 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl apply -f ashu-rc.yaml 
+replicationcontroller/ashu-rc-1 created
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  rc 
+NAME        DESIRED   CURRENT   READY   AGE
+ashu-rc-1   1         1         1       6s
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl   get  po
+NAME              READY   STATUS    RESTARTS   AGE
+ashu-rc-1-wxn24   1/1     Running   0          14s
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl   get  po -owide
+NAME              READY   STATUS    RESTARTS   AGE   IP              NODE      NOMINATED NODE   READINESS GATES
+ashu-rc-1-wxn24   1/1     Running   0          23s   192.168.34.45   minion1   <none>           <none>
+[ashu@docker-ce-server k8s-app-deploy]$ 
+```
+
+### recreation of pod is there 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl   get  po -owide
+NAME              READY   STATUS    RESTARTS   AGE   IP              NODE      NOMINATED NODE   READINESS GATES
+ashu-rc-1-wxn24   1/1     Running   0          23s   192.168.34.45   minion1   <none>           <none>
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  delete pod ashu-rc-1-wxn24
+pod "ashu-rc-1-wxn24" deleted
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl   get  po -owide
+NAME              READY   STATUS         RESTARTS   AGE   IP              NODE      NOMINATED NODE   READINESS GATES
+ashu-rc-1-9bc8d   1/1     Running        0          4s    192.168.34.47   minion1   <none>           <none>
+```
+
+### creating nodeport service using RC 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  rc
+NAME        DESIRED   CURRENT   READY   AGE
+ashu-rc-1   1         1         1       5m3s
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  expose rc  ashu-rc-1 --type NodePort --port 8080  --name ashulb3 --dry-run=client -o yaml >svcnode.yaml 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  apply -f svcnode.yaml 
+service/ashulb3 created
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  svc
+NAME      TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+ashulb3   NodePort   10.100.250.31   <none>        8080:32537/TCP   4s
+[ashu@docker-ce-server k8s-app-deploy]$ 
+```
+
+
