@@ -399,6 +399,72 @@ No resources found in default namespace.
 
 ```
 
+### Networking for K8s 
+
+<img src="net1.png">
+
+## CNI model of pod container networking 
+
+<img src="net2.png">
+
+### Verify network connection b/w pods 
+
+### Deploy pods 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  apply -f autopod.json 
+pod/ashupod123 created
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get po -owide
+NAME         READY   STATUS    RESTARTS   AGE   IP              NODE      NOMINATED NODE   READINESS GATES
+ashupod123   1/1     Running   0          5s    192.168.34.12   minion1   <none>           <none>
+gitapod1     1/1     Running   0          11m   192.168.34.11   minion1   <none>           <none>
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get po -owide
+NAME          READY   STATUS    RESTARTS   AGE   IP                NODE      NOMINATED NODE   READINESS GATES
+aishpod123    1/1     Running   0          9s    192.168.34.15     minion1   <none>           <none>
+ashupod123    1/1     Running   0          37s   192.168.34.12     minion1   <none>           <none>
+gitapod1      1/1     Running   0          12m   192.168.34.11     minion1   <none>           <none>
+manjupod123   1/1     Running   0          2s    192.168.34.16     minion1   <none>           <none>
+rubipod123    1/1     Running   0          15s   192.168.34.14     minion1   <none>           <none>
+sbpod11       1/1     Running   0          7s    192.168.179.204   minion2   <none>           <none>
+sonpod123     1/1     Running   0          20s   192.168.34.13     minion1   <none>           <none>
+[ashu@docker-ce-server k8s-app-deploy]$ 
+
+```
+
+### lets check pod to pod connection 
+
+```
+[ashu@docker-ce-server ~]$ kubectl run -it  --rm  ashutest1  --image=alpine   
+
+If you don't see a command prompt, try pressing enter.
+
+/ # 
+/ # 
+/ # ping  192.168.34.15
+PING 192.168.34.15 (192.168.34.15): 56 data bytes
+64 bytes from 192.168.34.15: seq=0 ttl=62 time=0.516 ms
+64 bytes from 192.168.34.15: seq=1 ttl=62 time=0.333 ms
+^C
+--- 192.168.34.15 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.333/0.424/0.516 ms
+/ # 
+/ # ping  192.168.179.204
+PING 192.168.179.204 (192.168.179.204): 56 data bytes
+64 bytes from 192.168.179.204: seq=0 ttl=63 time=0.113 ms
+64 bytes from 192.168.179.204: seq=1 ttl=63 time=0.048 ms
+^C
+--- 192.168.179.204 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.048/0.080/0.113 ms
+/ # exit
+Session ended, resume using 'kubectl attach ashutest1 -c ashutest1 -i -t' command when the pod is running
+pod "ashutest1" deleted
+[ashu@docker-ce-server ~]$ 
+
+
+```
+
 
 
 
