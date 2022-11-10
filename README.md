@@ -148,5 +148,70 @@ services:
 NAME                COMMAND             SERVICE             STATUS              PORTS
 ashuc1              "catalina.sh run"   ashuapp1            running             0.0.0.0:1234->8080/tcp
 ```
+### lets push image to personal dockerhub account 
+
+```
+[root@docker-ce-server ~]# docker images   |  grep ashu
+ashujavaweb         appv1               a0dc13fd0658        6 minutes ago       474MB
+[root@docker-ce-server ~]# 
+[root@docker-ce-server ~]# 
+[root@docker-ce-server ~]# 
+[root@docker-ce-server ~]# docker  tag  a0dc13fd0658   docker.io/dockerashu/ashujavaweb:appv1 
+[root@docker-ce-server ~]# docker login 
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: dockerashu
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[root@docker-ce-server ~]# docker push  docker.io/dockerashu/ashujavaweb:appv1
+The push refers to repository [docker.io/dockerashu/ashujavaweb]
+2f4c3e0bfad3: Pushed 
+5f70bf18a086: Pushed 
+dddf6dae16f7: Pushed 
+21dc488a6ae1: Mounted from library/tomcat 
+4fabb329db7d: Mounted from library/tomcat 
+fc85d6aaa33d: Mounted from library/tomcat 
+61daadd08923: Mounted from library/tomcat 
+cafbfaab627b: Mounted from library/tomcat 
+3a87162a073c: Mounted from library/tomcat 
+f4a670ac65b6: Mounted from library/tomcat 
+appv1: digest: sha256:64af86493cb0fb93df6276eb9a49c9659dea89629146beb412670e89213c438f size: 2616
+[root@docker-ce-server ~]# docker logout 
+Removing login credentials for https://index.docker.io/v1/
+```
+
+## Designing Pod 
+
+### creating pod YAML 
+
+```
+apiVersion: 'v1' # to send pod request apiServer version 
+kind: Pod # sending request for pod only
+metadata: # info about kind 
+  name: ashupod-javawebapp # name of pod 
+spec: # app Resources like storage,security,containers details
+  containers: 
+  - name: ashuc1 
+    image: docker.io/dockerashu/ashujavaweb:appv1 
+    ports:
+    - containerPort: 8080 
+```
+
+### lets deploy it 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  apply -f  ashupod.yaml 
+pod/ashupod-javawebapp unchanged
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl   get  pods
+NAME                    READY   STATUS             RESTARTS   AGE
+aishpod-javawebapp      1/1     Running            0          4m39s
+ashupod-javawebapp      1/1     Running            0          5m5s
+gitapod-javawebapp      1/1     Running            0          11s
+```
+
+
 
 
