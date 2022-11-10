@@ -875,5 +875,52 @@ ashu-rc-1-p4292   1/1     Running   0          6s     192.168.34.59     minion1 
 NAME      ENDPOINTS                                 AGE
 ashulb3   192.168.179.232:8080,192.168.34.59:8080   15m
 ```
+### RC -- revision 
+
+<img src="rev1.png">
+
+## Introduction to Deployment controller in k8s 
+
+<img src="dep.png">
+
+### creating deployment 
+
+<img src="dep1.png">
+
+```
+kubectl  create  deployment ashu-deploy1  --image=docker.io/dockerashu/ashujavaweb:appv1  --port 8080 --dry-run=client -o yaml  >deployment.yaml
+```
+### creating deployment 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  apply -f deployment.yaml 
+deployment.apps/ashu-deploy1 created
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  deployment 
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-deploy1   1/1     1            1           10s
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get po
+NAME                            READY   STATUS    RESTARTS   AGE
+ashu-deploy1-84fd7bd4b5-lrwr7   1/1     Running   0          15s
+[ashu@docker-ce-server k8s-app-deploy]$ 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl expose deployment ashu-deploy1  --type NodePort --port 8080 --name ashulb4 --dry-run=client -o yaml >svcbydepexpose.yaml 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  apply -f svcbydepexpose.yaml 
+service/ashulb4 created
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  svc 
+NAME      TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+ashulb4   NodePort   10.104.90.29   <none>        8080:32458/TCP   4s
+[ashu@docker-ce-server k8s-app-deploy]$ 
+```
+
+### scaling pod manually using deployment controller 
+
+```
+ashu@docker-ce-server k8s-app-deploy]$ kubectl  scale deployment  ashu-deploy1 --replicas=3
+deployment.apps/ashu-deploy1 scaled
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get po
+NAME                            READY   STATUS    RESTARTS   AGE
+ashu-deploy1-84fd7bd4b5-j9gvq   1/1     Running   0          5s
+ashu-deploy1-84fd7bd4b5-l2bxf   1/1     Running   0          5s
+ashu-deploy1-84fd7bd4b5-lrwr7   1/1     Running   0          2m54s
+```
 
 
