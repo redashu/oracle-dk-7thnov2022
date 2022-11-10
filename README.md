@@ -818,3 +818,40 @@ ashulb3   NodePort   10.100.250.31   <none>        8080:32537/TCP   4s
 ```
 
 
+### scaling pod using RC -- manually 
+
+```
+ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  rc 
+NAME        DESIRED   CURRENT   READY   AGE
+ashu-rc-1   1         1         1       17m
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get po 
+NAME              READY   STATUS    RESTARTS   AGE
+ashu-rc-1-9bc8d   1/1     Running   0          16m
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  scale rc  ashu-rc-1   --replicas=3
+replicationcontroller/ashu-rc-1 scaled
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  rc 
+NAME        DESIRED   CURRENT   READY   AGE
+ashu-rc-1   3         3         3       18m
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  po 
+NAME              READY   STATUS    RESTARTS   AGE
+ashu-rc-1-9bc8d   1/1     Running   0          16m
+ashu-rc-1-ch4dl   1/1     Running   0          10s
+ashu-rc-1-z4kt6   1/1     Running   0          10s
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  po -owide 
+NAME              READY   STATUS    RESTARTS   AGE   IP                NODE      NOMINATED NODE   READINESS GATES
+ashu-rc-1-9bc8d   1/1     Running   0          17m   192.168.34.47     minion1   <none>           <none>
+ashu-rc-1-ch4dl   1/1     Running   0          19s   192.168.34.53     minion1   <none>           <none>
+ashu-rc-1-z4kt6   1/1     Running   0          19s   192.168.179.229   minion2   <none>           <none>
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  scale rc  ashu-rc-1   --replicas=1
+replicationcontroller/ashu-rc-1 scaled
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  scale rc  ashu-rc-1   --replicas=0
+replicationcontroller/ashu-rc-1 scaled
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  po 
+No resources found in ashu-project namespace.
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  scale rc  ashu-rc-1   --replicas=1
+replicationcontroller/ashu-rc-1 scaled
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  po 
+NAME              READY   STATUS    RESTARTS   AGE
+ashu-rc-1-9bph6   1/1     Running   0          3s
+```
+
