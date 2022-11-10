@@ -337,6 +337,68 @@ exit
 pod "ashupod-javawebapp" deleted
 ```
 
+### lets auto generate YAML / JSON 
+
+```
+[ashu@docker-ce-server ~]$ kubectl run  ashupod123  --image=docker.io/dockerashu/ashujavaweb:appv1  --port=8080 --dry-run=client -o yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod123
+  name: ashupod123
+spec:
+  containers:
+  - image: docker.io/dockerashu/ashujavaweb:appv1
+    name: ashupod123
+    ports:
+    - containerPort: 8080
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+[ashu@docker-ce-server ~]$ kubectl run  ashupod123  --image=docker.io/dockerashu/ashujavaweb:appv1  --port=8080 --dry-run=client -o json 
+{
+    "kind": "Pod",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "ashupod123",
+        "creationTimestamp": null,
+        "labels": {
+            "run": "ashupod123"
+        }
+    },
+    "spec": {
+
+```
+
+### saving output into a file 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl run  ashupod123  --image=docker.io/dockerashu/ashujavaweb:appv1  --port=8080 --dry-run=client -o yaml  >autopod.yaml 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl run  ashupod123  --image=docker.io/dockerashu/ashujavaweb:appv1  --port=8080 --dry-run=client -o json  >autopod.json  
+[ashu@docker-ce-server k8s-app-deploy]$ ls
+ashupod.yaml  autopod.json  autopod.yaml
+```
+
+### delete pod ..using YAML 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl apply -f autopod.yaml 
+pod/ashupod123 created
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get pods
+NAME         READY   STATUS    RESTARTS   AGE
+ashupod123   1/1     Running   0          4s
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  delete -f autopod.yaml 
+pod "ashupod123" deleted
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get po 
+No resources found in default namespace.
+[ashu@docker-ce-server k8s-app-deploy]$ 
+
+
+```
+
 
 
 
