@@ -465,7 +465,78 @@ pod "ashutest1" deleted
 
 ```
 
+### Introduction to service Resource in k8s 
 
+<img src="service.png">
+
+### Service TYpe in k8s 
+
+<img src="stype.png">
+
+### creating nodeport service yAML -- when pod is already running 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl   get  po 
+NAME                    READY   STATUS    RESTARTS   AGE
+aishpod123              1/1     Running   0          38m
+ashupod123              1/1     Running   0          39m
+gitapod1                1/1     Running   0          51m
+haripod123              1/1     Running   0          36m
+manjupod123             1/1     Running   0          38m
+navneetpod-javawebapp   1/1     Running   0          45s
+rubipod123              1/1     Running   0          39m
+sbpod11                 1/1     Running   0          38m
+sonpod123               1/1     Running   0          39m
+sooryapod123            1/1     Running   0          30m
+venkatpod-javawebapp    1/1     Running   0          36m
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl   expose  pod   ashupod123  --type NodePort  --port 8080 --name ashulb1 --dry-run=client -o yaml >nodeport.yaml  
+[ashu@docker-ce-server k8s-app-deploy]$ ls
+ashupod.yaml  autopod.json  autopod.yaml  nodeport.yaml
+[ashu@docker-ce-server k8s-app-deploy]$ 
+
+
+```
+
+### view Service YAML 
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod123
+  name: ashulb1
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: ashupod123
+  type: NodePort
+status:
+  loadBalancer: {}
+
+```
+
+### lets deploy service 
+
+```
+ 463  kubectl apply -f nodeport.yaml 
+  464  kubectl  get  service 
+  465  history 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  service 
+NAME          TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+aishlb1       NodePort    10.107.215.35    <none>        8080:30521/TCP   96s
+aishpod123    NodePort    10.110.82.9      <none>        8080:30316/TCP   4m5s
+ashulb1       NodePort    10.110.133.77    <none>        8080:30413/TCP   2m5s
+gitalb1       NodePort    10.106.187.13    <none>        8080:30596/TCP   111s
+kubernetes    ClusterIP   10.96.0.1        <none>        443/TCP          21h
+manjulb1      NodePort    10.103.160.229   <none>        8080:32020/TCP   2m46s
+rubilb1       NodePort    10.104.182.233   <none>        8080:31247/TCP   98s
+sblb1         NodePort    10.102.225.253   <none> 
+```
 
 
 
