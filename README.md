@@ -212,6 +212,132 @@ ashupod-javawebapp      1/1     Running            0          5m5s
 gitapod-javawebapp      1/1     Running            0          11s
 ```
 
+### pod operations in detail
+
+### 
+
+```
+[ashu@docker-ce-server ~]$ kubectl  get po -o wide
+NAME                    READY   STATUS    RESTARTS   AGE   IP                NODE      NOMINATED NODE   READINESS GATES
+aishpod-javawebapp      1/1     Running   0          40m   192.168.34.4      minion1   <none>           <none>
+ashupod-javawebapp      1/1     Running   0          40m   192.168.34.1      minion1   <none>           <none>
+gitapod-javawebapp      1/1     Running   0          35m   192.168.179.202   minion2   <none>           <none>
+haripod-javawebapp      1/1     Running   0          24m   192.168.179.203   minion2   <none>           <none>
+
+```
+
+### checking pod info in detail 
+
+```
+[ashu@docker-ce-server ~]$ kubectl  describe pod ashupod-javawebapp 
+Name:             ashupod-javawebapp
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minion1/10.0.0.249
+Start Time:       Thu, 10 Nov 2022 05:30:49 +0000
+Labels:           <none>
+Annotations:      cni.projectcalico.org/containerID: 082c5ddd2ed1ff8aef03ff8442ac56fc79d39b8bc961ad91416c293db40b62f6
+                  cni.projectcalico.org/podIP: 192.168.34.1/32
+                  cni.projectcalico.org/podIPs: 192.168.34.1/32
+Status:           Running
+IP:               192.168.34.1
+IPs:
+  IP:  192.168.34.1
+Containers:
+  ashuc1:
+    Container ID:   containerd://7d4e16e0eb3656454f447b8897f9eb376f63b720912096d2c60f3df6d84ae3e1
+    Image:          docker.io/dockerashu/ashujavaweb:appv1
+    Image ID:       docker.io/dockerashu/ashujavaweb@sha256:64af86493cb0fb93df6276eb9a49c9659dea89629146beb412670e89213c438f
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Thu, 10 Nov 2022 05:31:08 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-frk87 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-frk87:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  43m   default-scheduler  Successfully assigned default/ashupod-javawebapp to minion1
+  Normal  Pulling    43m   kubelet            Pulling image "docker.io/dockerashu/ashujavaweb:appv1"
+  Normal  Pulled     43m   kubelet            Successfully pulled image "docker.io/dockerashu/ashujavaweb:appv1" in 10.027514903s
+  Normal  Created    43m   kubelet            Created container ashuc1
+  Normal  Started    43m   kubelet            Started container ashuc1
+```
+
+### checking logs 
+
+```
+[ashu@docker-ce-server ~]$ kubectl  logs  ashupod-javawebapp
+NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+10-Nov-2022 05:31:08.390 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/10.1.1
+10-Nov-2022 05:31:08.393 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Oct 3 2022 12:42:14 UTC
+10-Nov-2022 05:31:08.394 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 10.1.1.0
+10-Nov-2022 05:31:08.394 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+10-Nov-2022 05:31:08.394 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            5.4.17-2136.311.6.1.el7uek.x86_64
+10-Nov-2022 05:31:08.394 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+10-Nov-2022 05:31:08.394 INFO [main] org.apache.cata
+```
+
+### access container running inside pod 
+
+```
+[ashu@docker-ce-server ~]$ kubectl  exec -it ashupod-javawebapp  -- bash 
+root@ashupod-javawebapp:/usr/local/tomcat/webapps/oracle# 
+root@ashupod-javawebapp:/usr/local/tomcat/webapps/oracle# 
+root@ashupod-javawebapp:/usr/local/tomcat/webapps/oracle# 
+root@ashupod-javawebapp:/usr/local/tomcat/webapps/oracle# ls
+devops.png  index.html  WEB-INF  welcome.jsp
+root@ashupod-javawebapp:/usr/local/tomcat/webapps/oracle# cd /
+root@ashupod-javawebapp:/# ls
+bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@ashupod-javawebapp:/# cat  /etc/os-release 
+PRETTY_NAME="Ubuntu 22.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.1 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy
+root@ashupod-javawebapp:/# exit
+exit
+[ashu@docker-ce-server ~]$ 
+
+```
+
+### deleting pod 
+
+```
+[ashu@docker-ce-server ~]$ kubectl  delete pod ashupod-javawebapp
+pod "ashupod-javawebapp" deleted
+```
+
+
 
 
 
