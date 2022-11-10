@@ -537,6 +537,204 @@ manjulb1      NodePort    10.103.160.229   <none>        8080:32020/TCP   2m46s
 rubilb1       NodePort    10.104.182.233   <none>        8080:31247/TCP   98s
 sblb1         NodePort    10.102.225.253   <none> 
 ```
+### Namespaces in k8s 
+
+<img src="ns.png">
+
+### creating namespace & setting it default for your self 
+
+```
+[ashu@docker-ce-server ~]$ kubectl  get  namespaces 
+NAME              STATUS   AGE
+default           Active   22h
+kube-node-lease   Active   22h
+kube-public       Active   22h
+kube-system       Active   22h
+[ashu@docker-ce-server ~]$ kubectl  create  namespace  ashu-project 
+namespace/ashu-project created
+[ashu@docker-ce-server ~]$ kubectl  get  ns
+NAME              STATUS   AGE
+ashu-project      Active   5s
+default           Active   22h
+kube-node-lease   Active   22h
+kube-public       Active   22h
+kube-system       Active   22h
+[ashu@docker-ce-server ~]$ kubectl config set-context --current --namespace ashu-project 
+Context "kubernetes-admin@kubernetes" modified.
+[ashu@docker-ce-server ~]$ 
+[ashu@docker-ce-server ~]$ kubectl   get  pods
+No resources found in ashu-project namespace.
+[ashu@docker-ce-server ~]$ kubectl  config  get-contexts 
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   ashu-project
+[ashu@docker-ce-server ~]$ 
+
+```
+
+### creating resources in personal namespaces 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl config get-contexts 
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   ashu-project
+[ashu@docker-ce-server k8s-app-deploy]$ ls
+ashupod.yaml  autopod.json  autopod.yaml  node1svc.yaml  nodeport.yaml
+[ashu@docker-ce-server k8s-app-deploy]$ 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl apply -f  autopod.yaml  -f nodeport.yaml 
+pod/ashupod123 created
+service/ashulb1 created
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  po 
+NAME         READY   STATUS    RESTARTS   AGE
+ashupod123   1/1     Running   0          5s
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  svc
+NAME      TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+ashulb1   NodePort   10.105.202.200   <none>        8080:30528/TCP   8s
+[ashu@docker-ce-server k8s-app-deploy]$ 
+
+```
+
+### deploying private image registry to k8s 
+
+```
+kubectl  run ashupypod1 --image=phx.ocir.io/axmbtg8judkl/oracleashu:pyappv1  --dry-run=client -o yaml >privatepod.yaml 
+```
+
+### lets deploy it 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  run ashupypod1 --image=phx.ocir.io/axmbtg8judkl/oracleashu:pyappv1  --dry-run=client -o yaml >privatepod.yaml 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl apply -f privatepod.yaml 
+pod/ashupypod1 created
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  pods
+NAME         READY   STATUS             RESTARTS   AGE
+ashupypod1   0/1     ImagePullBackOff   0          4s
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  pods
+NAME         READY   STATUS             RESTARTS   AGE
+ashupypod1   0/1     ImagePullBackOff   0          27s
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  describe pod ashupypod1  
+Name:             ashupypod1
+Namespace:        ashu-project
+Priority:         0
+Service Account:  default
+Node:             minion1/10.0.0.249
+Start Time:       Thu, 10 Nov 2022 09:24:17 +0000
+Labels:           run=ashupypod1
+Annotations:      cni.projectcalico.org/containerID: 869ceee9a91b1bcc24e48de2ebf693d3fa0b89d8d3e810e7611ffcb301cee84d
+                  cni.projectcalico.org/podIP: 192.168.34.32/32
+                  cni.projectcalico.org/podIPs: 192.168.34.32/32
+Status:           Pending
+IP:               192.168.34.32
+IPs:
+  IP:  192.168.34.32
+Containers:
+  ashupypod1:
+    Container ID:   
+    Image:          phx.ocir.io/axmbtg8judkl/oracleashu:pyappv1
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ErrImagePull
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-5z8tz (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             False 
+  ContainersReady   False 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-5z8tz:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  40s                default-scheduler  Successfully assigned ashu-project/ashupypod1 to minion1
+  Normal   Pulling    23s (x2 over 39s)  kubelet            Pulling image "phx.ocir.io/axmbtg8judkl/oracleashu:pyappv1"
+  Warning  Failed     23s (x2 over 39s)  kubelet            Failed to pull image "phx.ocir.io/axmbtg8judkl/oracleashu:pyappv1": rpc error: code = Unknown desc = failed to pull and unpack image "phx.ocir.io/axmbtg8judkl/oracleashu:pyappv1": failed to resolve reference "phx.ocir.io/axmbtg8judkl/oracleashu:pyappv1": unexpected status code [manifests pyappv1]: 403 Forbidden
+  Warning  Failed     23s (x2 over 39s)  kubelet            Error: ErrImagePull
+  Normal   BackOff    8s (x3 over 39s)   kubelet            Back-off pulling image "phx.ocir.io/axmbtg8judkl/oracleashu:pyappv1"
+  Warning  Failed     8s (x3 over 39s)   kubelet            Error: ImagePullBackOff
+```
+
+## Introduction to SEcret in k8s 
+
+<img src="secret.png">
+
+### creating secret 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  create  secret 
+Create a secret using specified subcommand.
+
+Available Commands:
+  docker-registry   Create a secret for use with a Docker registry
+  generic           Create a secret from a local file, directory, or literal value
+  tls               Create a TLS secret
+
+Usage:
+  kubectl create secret [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  create  secret docker-registry  ashu-reg-secret --docker-server=phx.ocir.io   --docker-username="axmbtg8jail.com" --docker-password="Q4(-"  --dry-run=client -o  yaml  >secret.yaml 
+```
+
+###
+
+```
+511  kubectl apply -f secret.yaml 
+  512  history 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  secret 
+NAME              TYPE                             DATA   AGE
+ashu-reg-secret   kubernetes.io/dockerconfigjson   1      7s
+```
+
+### pod yaml with secret info 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupypod1
+  name: ashupypod1
+spec:
+  imagePullSecrets: # calling secret 
+  - name: ashu-reg-secret # name of secret 
+  containers:
+  - image: phx.ocir.io/axmbtg8judkl/oracleashu:pyappv1
+    name: ashupypod1
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+```
+
+### lets deploy it again 
+
+```
+[ashu@docker-ce-server k8s-app-deploy]$ 
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl replace  -f privatepod.yaml --force 
+pod "ashupypod1" deleted
+pod/ashupypod1 replaced
+[ashu@docker-ce-server k8s-app-deploy]$ kubectl  get  po 
+NAME         READY   STATUS    RESTARTS   AGE
+ashupypod1   1/1     Running   0          13s
+[ashu@docker-ce-server k8s-app-deploy]$ 
 
 
-
+```
