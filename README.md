@@ -34,5 +34,28 @@ fire@ashutoshhs-MacBook-Air k8s-app-deploy %
 
 <img src="lb.png">
 
+### creating Loadbalancer & NodepOrt service 
+
+```
+ kubectl expose deployment ashu-dep1  --type LoadBalancer --port 80 --name ashulb999       --dry-run=client -o yaml >loadbalancer.yaml
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get  svc 
+NAME        TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+ashulb2     NodePort       10.98.71.31    <none>        80:31285/TCP   52m
+ashulb999   LoadBalancer   10.96.154.10   <pending>     80:30038/TCP   41s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+
+```
+
+### problem in Having app loadbalancer -- in case of multi app hosting 
+
+<img src="apph.png">
+
+### Ingress controller usage in k8s 
+
+<img src="ingress.png">
+
+
+
 
 
