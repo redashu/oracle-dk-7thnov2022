@@ -285,5 +285,9 @@ ashu-app-rule   nginx   me.ashutoshh.in   172.31.32.194   80      65s
 fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
 
 ```
+### Overall in k8s 
+
+<img src="k8sall.png">
+
 
 
