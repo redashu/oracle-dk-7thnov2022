@@ -268,3 +268,22 @@ spec:
               number: 80
 ```
 
+### updating Ingress rule 
+
+```
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % ls
+clusterip.yaml          ingress.yaml            mytask.yaml
+deploy.yaml             loadbalancer.yaml       np.yaml
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl apply -f ingress.yaml 
+ingress.networking.k8s.io/ashu-app-rule created
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get  ingress 
+NAME            CLASS   HOSTS             ADDRESS   PORTS   AGE
+ashu-app-rule   nginx   me.ashutoshh.in             80      8s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get  ingress 
+NAME            CLASS   HOSTS             ADDRESS         PORTS   AGE
+ashu-app-rule   nginx   me.ashutoshh.in   172.31.32.194   80      65s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+
+```
+
+
