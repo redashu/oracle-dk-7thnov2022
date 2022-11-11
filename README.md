@@ -30,5 +30,9 @@ ashulb2   NodePort   10.98.71.31   <none>        80:31285/TCP   6s
 fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
 ```
 
+### creating externla LB 
+
+<img src="lb.png">
+
 
 
