@@ -385,4 +385,58 @@ ashudbsvc1   ClusterIP   10.111.188.156   <none>        3306/TCP   3s
 fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
 ```
 
+### auto scaling of POds
+
+<img src="auto.png">
+
+### metric server for auto scaling in POd 
+
+```
+fire@ashutoshhs-MacBook-Air ~ % kubectl  get  po -n kube-system
+NAME                                       READY   STATUS    RESTARTS       AGE
+calico-kube-controllers-58dbc876ff-vjrt8   1/1     Running   6 (7h8m ago)   23d
+calico-node-8sdk7                          1/1     Running   6 (7h8m ago)   23d
+calico-node-d4zcc                          1/1     Running   6 (7h8m ago)   23d
+calico-node-qzvk8                          1/1     Running   6 (7h8m ago)   23d
+coredns-565d847f94-fh6bd                   1/1     Running   6 (7h8m ago)   23d
+coredns-565d847f94-k6dzc                   1/1     Running   6 (7h8m ago)   23d
+etcd-control-plane                         1/1     Running   6 (7h8m ago)   23d
+kube-apiserver-control-plane               1/1     Running   6 (7h8m ago)   23d
+kube-controller-manager-control-plane      1/1     Running   6 (7h8m ago)   23d
+kube-proxy-4kqth                           1/1     Running   6 (7h8m ago)   23d
+kube-proxy-9xrbh                           1/1     Running   6 (7h8m ago)   23d
+kube-proxy-bkldn                           1/1     Running   6 (7h8m ago)   23d
+kube-scheduler-control-plane               1/1     Running   6 (7h8m ago)   23d
+metrics-server-767967fcd-gtdl4             1/1     Running   0              23m
+fire@ashutoshhs-MacBook-Air ~ % 
+
+```
+### Hpa implement 
+
+```
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl get deploy
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+mydep1   1/1     1            1           32m
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get  po 
+NAME                      READY   STATUS    RESTARTS   AGE
+mydep1-7469f69b4f-fcprk   1/1     Running   0          33m
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get hpa
+No resources found in ashu-project namespace.
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl autoscale deployment mydep1  --cpu-percent=70  --min=2 --max=20 --dry-run=clie
+nt -o yaml  >autoscale.yaml 
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl apply -f autoscale.yaml 
+horizontalpodautoscaler.autoscaling/mydep1 created
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get  hpa
+NAME     REFERENCE           TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+mydep1   Deployment/mydep1   <unknown>/70%   2         20        0          4s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get deploy 
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+mydep1   1/1     1            1           37m
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+```
+
+
+
+
 
