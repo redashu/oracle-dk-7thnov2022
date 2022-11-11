@@ -290,4 +290,82 @@ fire@ashutoshhs-MacBook-Air k8s-app-deploy %
 <img src="k8sall.png">
 
 
+### DB deployment in k8s without storage 
+
+
+### creating secret to store DB password INFO  
+
+```
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  create secret generic ashu-db-pass --from-literal  mypass="Cisco800Db"       
+ --dry-run=client -o yaml >dbsecret.yaml 
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % ls
+clusterip.yaml          deploy.yaml             ingress.yaml            mytask.yaml
+dbsecret.yaml           deploydb.yaml           loadbalancer.yaml       np.yaml
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl apply -f dbsecret.yaml 
+secret/ashu-db-pass created
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get secret 
+NAME           TYPE     DATA   AGE
+ashu-db-pass   Opaque   1      4s
+fire@ashutoshhs-MacBook-Air k8s-app     
+```
+
+
+###  use this secret in deployment YAML 
+
+```
+kubectl create  deployment mydep1  --image=mysql:5.6  --dry-run=client -o yaml >deploydb.yaml 
+```
+
+### updating YAML 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mydep1
+  name: mydep1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mydep1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mydep1
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env: # to create and update ENV var section 
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom: # reading password from secret 
+           secretKeyRef: # secret calling
+            name: ashu-db-pass # name of the secret 
+            key: mypass # key of the secret 
+        resources: {}
+status: {}
+
+```
+
+### lets deploy it 
+
+```
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl apply -f deploydb.yaml 
+deployment.apps/mydep1 created
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get  deploy 
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+mydep1   1/1     1            1           5s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get po 
+NAME                      READY   STATUS    RESTARTS   AGE
+mydep1-7469f69b4f-fcprk   1/1     Running   0          10s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get secret
+NAME           TYPE     DATA   AGE
+ashu-db-pass   Opaque   1      6m10s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+```
 
