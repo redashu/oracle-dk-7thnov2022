@@ -200,4 +200,71 @@ service/ashusvc1   NodePort   10.108.90.238   <none>        1234:31009/TCP   21s
 fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
 ```
 
+## TO implement Ingress controller -- 
+
+### step 1 -- create Deployment -- and scale it to 3 pod
+
+```
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % ls
+deploy.yaml             loadbalancer.yaml       mytask.yaml             np.yaml
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl apply -f  deploy.yaml 
+deployment.apps/ashu-dep1 created
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get deploy
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-dep1   1/1     1            1           8s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  scale deploy ashu-dep1  --replicas=3
+deployment.apps/ashu-dep1 scaled
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get deploy                          
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-dep1   3/3     3            3           32s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl get  po -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP                NODE      NOMINATED NODE   READINESS GATES
+ashu-dep1-7db755dc49-9kb6v   1/1     Running   0          67s   192.168.235.160   worker1   <none>           <none>
+ashu-dep1-7db755dc49-pszvn   1/1     Running   0          37s   192.168.189.90    worker2   <none>           <none>
+ashu-dep1-7db755dc49-ts5xh   1/1     Running   0          37s   192.168.235.161   worker1   <none>           <none>
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+
+```
+
+### creating clusterIP type service 
+
+```
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl get  deploy
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+ashu-dep1   3/3     3            3           5m19s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl expose deploy  ashu-dep1  --type ClusterIP --port 80 --name ashulb7 --dry-run=
+client -o yaml >clusterip.yaml
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl apply -f clusterip.yaml 
+service/ashulb7 created
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl get svc
+NAME      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+ashulb7   ClusterIP   10.102.196.135   <none>        80/TCP    4s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+
+```
+
+
+### Ingress Routing RUle 
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ashu-app-rule  # name of ingress routing rule 
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx # ingress className 
+  rules:
+  - host: me.ashutoshh.in # my app domain URL 
+    http:
+      paths:
+      - path: / # app home page 
+        pathType: Prefix
+        backend:
+          service:
+            name: ashulb7 # name of my service -- Internal LB 
+            port:
+              number: 80
+```
 
