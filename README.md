@@ -369,3 +369,20 @@ ashu-db-pass   Opaque   1      6m10s
 fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
 ```
 
+### creating service 
+
+```
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get deploy 
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+mydep1   1/1     1            1           2m4s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl expose deploy mydep1 --type ClusterIP --port 3306 --name ashudbsvc1 --dry-run=
+client -o yaml >dbsvc.yaml 
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl apply -f dbsvc.yaml 
+service/ashudbsvc1 created
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl get  svc 
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+ashudbsvc1   ClusterIP   10.111.188.156   <none>        3306/TCP   3s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+```
+
+
