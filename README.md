@@ -436,6 +436,10 @@ mydep1   1/1     1            1           37m
 fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
 ```
 
+## Helm for K8s 
+
+<img src="helm.png">
+
 
 
 
