@@ -122,6 +122,82 @@ fire@ashutoshhs-MacBook-Air Desktop %
 
 <img src="clusterip.png">
 
+### YAML to perform task
 
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: ashuk8s1
+spec: {}
+status: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod1
+  name: ashupod1
+  namespace: ashuk8s1 # namespace info 
+spec:
+  containers:
+  - image: ubuntu
+    name: ashupod1
+    command: ['sh','-c','sleep 10000'] # process of container 
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1
+  namespace: ashuk8s1 
+spec:
+  ports:
+  - name: 1234-80
+    port: 1234
+    protocol: TCP
+    targetPort: 80
+    nodePort: 31009
+  selector:
+    app: ashusvc1
+  type: NodePort
+status:
+  loadBalancer: {}
+
+```
+
+###
+
+```
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl apply -f mytask.yaml 
+namespace/ashuk8s1 created
+pod/ashupod1 created
+service/ashusvc1 created
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get ns
+NAME              STATUS   AGE
+aishh-project     Active   4h2m
+ashu-project      Active   4h6m
+ashuk8s1          Active   8s
+default           Active   23d
+gita-project      Active   4h5m
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % kubectl  get po,svc -n ashuk8s1
+NAME           READY   STATUS    RESTARTS   AGE
+pod/ashupod1   1/1     Running   0          21s
+
+NAME               TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/ashusvc1   NodePort   10.108.90.238   <none>        1234:31009/TCP   21s
+fire@ashutoshhs-MacBook-Air k8s-app-deploy % 
+```
 
 
